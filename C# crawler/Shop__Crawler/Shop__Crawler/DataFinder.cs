@@ -28,6 +28,28 @@ namespace Shop__Crawler
             return result;
         }
 
+        public static string FindImage(CrawledPage crawledPage)
+        {
+            var x = crawledPage.HtmlDocument.GetElementbyId("p-inner-gallery");
+            var a = x?.ChildNodes.FindFirst("ktr-gallery");
+            var b = a?.ChildNodes.FindFirst("div");
+            var c = b?.ChildNodes.FindFirst("div").InnerHtml;
+
+            var imageUrl = "";
+
+            if (c != null)
+            {
+                var pFrom = c.IndexOf("static");
+                var pTo = c.IndexOf(".png") + ".png".Length;
+
+                if (pFrom < 1 || pTo < 1)
+                    return "";
+                imageUrl = c.Substring(pFrom, pTo - pFrom);
+            }
+
+            return imageUrl;
+        }
+
         private static string GetPriceWithCents(HtmlNode parentNode)
         {
             var zlots = parentNode.ChildNodes.FindFirst("#text").InnerText;

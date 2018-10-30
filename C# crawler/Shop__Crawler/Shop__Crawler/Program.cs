@@ -92,9 +92,10 @@ namespace Shop__Crawler
                 Console.WriteLine("Page had no content {0}", crawledPage.Uri.AbsoluteUri);
 
             var result = DataFinder.FindNameAndPrice(crawledPage);
+            var resultImageUrl = DataFinder.FindImage(crawledPage);
             if(result != "")
             {
-                _fileSystem.AddLine(result);
+                _fileSystem.AddLine($"{result}\t\t{resultImageUrl}");
             }
         }
 
