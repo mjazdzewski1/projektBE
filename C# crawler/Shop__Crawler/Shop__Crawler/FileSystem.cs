@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Shop__Crawler
+﻿namespace Shop__Crawler
 {
     class FileSystem
     {
-        private string _links = "";
+        private string _fileContent = "";
 
-        public void AddLink(string crawledLink)
+        public void AddLine(string line)
         {
-            _links += "\n" +crawledLink;
+            _fileContent += "\n" +line;
         }
 
         public void Save()
         {
-            System.IO.File.WriteAllText(@"crawledLinks.txt", _links);
+            System.IO.File.WriteAllText(@"crawled.txt", _fileContent);
         }
     }
 }
