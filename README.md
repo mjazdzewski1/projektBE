@@ -16,4 +16,4 @@ rzeczywistego sklepu internetowego; - DO ZROBIENIA
 6.Sklep powinien umożliwiać przeprowadzenie procesu zakupowego wraz z
 rejestracją konta – bez błędów;- DO ZROBIENIA
 
-7. Udostępnić możliwość oceniania produktów; DO ZROBIENIA
+7. Udostępnić możliwość oceniania produktów; DO ZROBIENIA.
