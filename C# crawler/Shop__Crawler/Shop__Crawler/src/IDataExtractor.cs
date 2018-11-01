@@ -11,6 +11,7 @@ namespace Shop__Crawler
         ExportedCsvModel AddName(CrawledPage crawledPage, ExportedCsvModel model);
         ExportedCsvModel AddPrice(CrawledPage crawledPage, ExportedCsvModel model);
         ExportedCsvModel AddDescription(CrawledPage crawledPage, ExportedCsvModel model);
+        ExportedCsvModel AddCategories(CrawledPage crawledPage, ExportedCsvModel model);
         ExportedCsvModel FormatPrice(ExportedCsvModel model);
         bool IsNotProductPage(CrawledPage page);
     }

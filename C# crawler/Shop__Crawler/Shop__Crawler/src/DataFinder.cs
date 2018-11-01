@@ -19,11 +19,14 @@ namespace Shop__Crawler
             model = _dataExtractor.AddName(page, model);
             if (string.IsNullOrEmpty(model.Name))
                 return;
+
             model = _dataExtractor.AddPrice(page, model);
             model = _dataExtractor.FormatPrice(model);
             model = _dataExtractor.AddImage(page, model);
             model = _dataExtractor.AddCategory(page, model);
             model = _dataExtractor.AddDescription(page, model);
+            model = _dataExtractor.AddCategories(page, model);
+
             CsvBuilder.TryAddRow(model);
         }
     }

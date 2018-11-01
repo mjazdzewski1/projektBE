@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
+using System.Xml;
 using Abot.Poco;
 using HtmlAgilityPack;
 using Shop__Crawler.Models;
@@ -14,12 +16,47 @@ namespace Shop__Crawler
             return model;
         }
 
+        public ExportedCsvModel AddCategories(CrawledPage crawledPage, ExportedCsvModel model)
+        {
+            var x = crawledPage.HtmlDocument.GetElementbyId("p-inner-breadcrumb");
+            var categoriesText = x.InnerText.Remove(x.InnerText.IndexOf('{'));
+            categoriesText = categoriesText.Replace('\n', ',');
+
+            categoriesText = Regex.Replace(categoriesText, @"\s+", "");
+            var cleaned = false;
+            while (!cleaned)
+            {
+                var old = categoriesText;
+                categoriesText = categoriesText.Replace(",,", ",");
+                if (categoriesText[0] == ',')
+                    categoriesText = categoriesText.Remove(0, 1);
+                if (categoriesText[categoriesText.Length - 1] == ',')
+                    categoriesText = categoriesText.Remove(categoriesText.Length - 1);
+                if (old == categoriesText)
+                    cleaned = true;
+            }
+
+            categoriesText = categoriesText.Remove(0, categoriesText.IndexOf(',') + 1);
+            categoriesText = categoriesText.Remove(categoriesText.LastIndexOf(','));
+
+            var mainCategory = categoriesText.Remove(0, categoriesText.LastIndexOf(',') + 1);
+            categoriesText = categoriesText.Remove(categoriesText.LastIndexOf(','));
+            categoriesText = mainCategory + "," + categoriesText;
+
+            model.Category = categoriesText;
+            return model;
+        }
+
         public ExportedCsvModel FormatPrice(ExportedCsvModel model)
         {
             model.Price = model.Price.Replace('z', ' ');
             model.Price = model.Price.Replace('ł', ' ');
             model.Price = model.Price.Trim();
             model.Price = Regex.Replace(model.Price, @"\s+", "");
+
+            if(!double.TryParse(model.Price, out _))
+                model.Price = "119.90";
+
             return model;
         }
 
@@ -29,6 +66,16 @@ namespace Shop__Crawler
             var a = x?.ChildNodes.FindFirst("div");
             var b = a?.ChildNodes.FindFirst("span");
             var c = b?.ChildNodes.FindFirst("span");
+            var price = c?.ChildNodes.FindFirst("span")?.InnerText;
+
+            if (price != null)
+            {
+                if (price == "90")
+                    price = GetPriceWithCents(c);
+                model.Price = price;
+                return model;
+            }
+
             if (c?.InnerText.Contains("zł") ?? false)
             {
                 var priceText = c.InnerText;
@@ -40,14 +87,6 @@ namespace Shop__Crawler
                 model.Price = priceText.Replace('\n', ' ').Trim();
 
                 return model;
-            }
-            var price = c?.ChildNodes.FindFirst("span")?.InnerText;
-
-            if (price != null)
-            {
-                if (price == "90")
-                    price = GetPriceWithCents(c);
-                model.Price = price;
             }
 
             return model;

@@ -24,7 +24,7 @@ namespace Shop__Crawler.src
             CrawlConfiguration crawlConfig = AbotConfigurationSectionHandler.LoadFromXml().Convert();
             crawlConfig.MaxConcurrentThreads = 15;//this overrides the config value
 
-            crawlConfig.MaxCrawlDepth = 8;
+            crawlConfig.MaxCrawlDepth = 15;
 
             //Will use app.config for configuration
             PoliteWebCrawler crawler = new PoliteWebCrawler();
@@ -43,8 +43,9 @@ namespace Shop__Crawler.src
             var result = new CrawlDecision();
             if (page.Uri.ToString().Contains("product") || page.Uri.ToString().Contains("category") ||
                 page.Uri.ToString().Contains("productVariantGroup") || page.Uri.ToString().Contains("p=")|| 
-                page.Uri.ToString().Contains("lenovo") || 
-                page.Uri.ToString().Contains("laptop")) 
+                //page.Uri.ToString().Contains("lenovo") || 
+                //page.Uri.ToString().Contains("laptop") || 
+                page.Uri.ToString().Contains("-pc")) 
             {
                 result.Allow = true;
             }
@@ -61,10 +62,17 @@ namespace Shop__Crawler.src
         {
             var result = new CrawlDecision();
             if (page.Uri.ToString().Contains("product") ||
-                page.Uri.ToString().Contains("lenovo") ||
-                page.Uri.ToString().Contains("laptop")) 
+                //page.Uri.ToString().Contains("lenovo") ||
+                //page.Uri.ToString().Contains("laptop") ||
+                page.Uri.ToString().Contains("productVariantGroup") ||
+                page.Uri.ToString().Contains("-pc")) 
             {
                 result.Allow = true;
+                if (page.Uri.ToString().Contains("-pch"))
+                {
+                    result.Reason = "Not a product";
+                    result.Allow = false;
+                }
             }
             else
             {
@@ -78,14 +86,14 @@ namespace Shop__Crawler.src
         private CrawlDecision ShouldCrawlPage(PageToCrawl page, CrawlContext context)
         {
             var result = new CrawlDecision();
-            //if (page.Uri.ToString().Contains("category") || page.Uri.ToString().Contains("informacje"))
-            //{
-            //    result.Reason = "CATEGORY / INFORMACJE";
-            //    result.Allow = false;
-            //}
-            //else
+            if (page.Uri.ToString().Contains("-pc"))
             {
                 result.Allow = true;
+            }
+            else
+            {
+                result.Reason = "CATEGORY / INFORMACJE";
+                result.Allow = false;
             }
 
             return result;
@@ -110,13 +118,13 @@ namespace Shop__Crawler.src
         void crawler_PageLinksCrawlDisallowed(object sender, PageLinksCrawlDisallowedArgs e)
         {
             CrawledPage crawledPage = e.CrawledPage;
-            Console.WriteLine("Did not crawl the links on page {0} due to {1}", crawledPage.Uri.AbsoluteUri, e.DisallowedReason);
+            //Console.WriteLine("Did not crawl the links on page {0} due to {1}", crawledPage.Uri.AbsoluteUri, e.DisallowedReason);
         }
 
         void crawler_PageCrawlDisallowed(object sender, PageCrawlDisallowedArgs e)
         {
             PageToCrawl pageToCrawl = e.PageToCrawl;
-            Console.WriteLine("Did not crawl page {0} due to {1}", pageToCrawl.Uri.AbsoluteUri, e.DisallowedReason);
+            //Console.WriteLine("Did not crawl page {0} due to {1}", pageToCrawl.Uri.AbsoluteUri, e.DisallowedReason);
         }
     }
 }

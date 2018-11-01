@@ -21,7 +21,8 @@ namespace Shop__Crawler
                 crawler.Crawl(
                     //new Uri("https://www.komputronik.pl/category/17631/lenovo-ideapad.html"));
                     //new Uri("https://www.komputronik.pl/category/17623/laptopy-lenovo.html"));
-                    new Uri("https://www.komputronik.pl/category/5022/laptopy.html"));
+                    //new Uri("https://www.komputronik.pl/category/5022/laptopy.html")); // <- ten jest spoko
+                    new Uri("https://www.komputronik.pl/category/5801/komputery-pc.html"));
 
 
             if (result.ErrorOccurred)
