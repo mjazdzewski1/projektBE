@@ -14,8 +14,11 @@ namespace Shop__Crawler.src
 {
     class CrawlerConfig
     {
+        private DataFinder _dataFinder;
         public PoliteWebCrawler CreateCrawler()
         {
+            _dataFinder = new DataFinder(new KomputronikDataExtractor());
+
             XmlConfigurator.Configure();
 
             CrawlConfiguration crawlConfig = AbotConfigurationSectionHandler.LoadFromXml().Convert();
@@ -101,7 +104,7 @@ namespace Shop__Crawler.src
             if (string.IsNullOrEmpty(crawledPage.Content.Text))
                 Console.WriteLine("Page had no content {0}", crawledPage.Uri.AbsoluteUri);
 
-            DataFinder.Run(crawledPage);
+            _dataFinder.Run(crawledPage);
         }
 
         void crawler_PageLinksCrawlDisallowed(object sender, PageLinksCrawlDisallowedArgs e)

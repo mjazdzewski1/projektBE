@@ -68,8 +68,10 @@
     <Compile Include="src\Crawler.cs" />
     <Compile Include="src\CrawlerConfig.cs" />
     <Compile Include="src\CsvBuilder.cs" />
+    <Compile Include="src\KomputronikDataExtractor.cs" />
     <Compile Include="src\DataFinder.cs" />
     <Compile Include="src\FileSystem.cs" />
+    <Compile Include="src\IDataExtractor.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
