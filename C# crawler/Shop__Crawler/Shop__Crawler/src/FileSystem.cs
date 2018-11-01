@@ -9,6 +9,11 @@
             _fileContent += "\n" +line;
         }
 
+        public void AddString(string toAdd)
+        {
+            _fileContent += toAdd;
+        }
+
         public void Save()
         {
             System.IO.File.WriteAllText(@"crawled.txt", _fileContent);
