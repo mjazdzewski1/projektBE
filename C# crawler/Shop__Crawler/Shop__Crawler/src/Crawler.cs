@@ -19,7 +19,10 @@ namespace Shop__Crawler
 
             CrawlResult result =
                 crawler.Crawl(
-                    new Uri("https://www.komputronik.pl/category/17631/lenovo-ideapad.html"));
+                    //new Uri("https://www.komputronik.pl/category/17631/lenovo-ideapad.html"));
+                    //new Uri("https://www.komputronik.pl/category/17623/laptopy-lenovo.html"));
+                    new Uri("https://www.komputronik.pl/category/5022/laptopy.html"));
+
 
             if (result.ErrorOccurred)
             {

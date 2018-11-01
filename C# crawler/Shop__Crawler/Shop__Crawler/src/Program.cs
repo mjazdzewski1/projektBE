@@ -8,9 +8,9 @@ namespace Shop__Crawler
     {
         static void Main(string[] args)
         {
+            CsvBuilder.SetUp();
             new Crawler().Start();
 
-            CsvBuilder.Save();
             Console.WriteLine("DONE!");
             Console.ReadKey();
         }

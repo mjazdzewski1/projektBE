@@ -1,4 +1,5 @@
-﻿using Abot.Poco;
+﻿using System.Text.RegularExpressions;
+using Abot.Poco;
 using HtmlAgilityPack;
 using Shop__Crawler.Models;
 
@@ -12,13 +13,23 @@ namespace Shop__Crawler
                 || page.Uri.ToString().Contains("search-filter") || page.Uri.ToString().Contains("customer") || page.Uri.ToString().Contains("productVariantGroup"))
                 return;
             ExportedCsvModel model = new ExportedCsvModel();
-            model = DataFinder.AddName(page, model);
-            if (model.Name == string.Empty || model.Name == null)
+            model = AddName(page, model);
+            if (string.IsNullOrEmpty(model.Name))
                 return;
-            model = DataFinder.AddPrice(page, model);
-            model = DataFinder.AddImage(page, model);
-            model = DataFinder.AddCategory(page, model);
+            model = AddPrice(page, model);
+            model = FormatPrice(model);
+            model = AddImage(page, model);
+            model = AddCategory(page, model);
             CsvBuilder.TryAddRow(model);
+        }
+
+        private static ExportedCsvModel FormatPrice(ExportedCsvModel model)
+        {
+            model.Price = model.Price.Replace('z', ' ');
+            model.Price = model.Price.Replace('ł', ' ');
+            model.Price = model.Price.Trim();
+            model.Price = Regex.Replace(model.Price, @"\s+", "");
+            return model;
         }
 
         private static ExportedCsvModel AddPrice(CrawledPage crawledPage, ExportedCsvModel model)
@@ -29,7 +40,14 @@ namespace Shop__Crawler
             var c = b?.ChildNodes.FindFirst("span");
             if (c?.InnerText.Contains("zł") ?? false)
             {
-                model.Price = c.InnerText.Replace('\n', ' ').Trim();
+                var priceText = c.InnerText;
+                if (priceText.Contains("Cena"))
+                {
+                    priceText = priceText.Replace("Cena internetowa", "");
+                }
+
+                model.Price = priceText.Replace('\n', ' ').Trim();
+
                 return model;
             }
             var price = c?.ChildNodes.FindFirst("span")?.InnerText;
@@ -38,11 +56,6 @@ namespace Shop__Crawler
             {
                 if (price == "90")
                     price = GetPriceWithCents(c);
-                var name = crawledPage.HtmlDocument.GetElementbyId("p-inner-name");
-                var nameFormatted = name?.ChildNodes.FindFirst("h1").InnerText;
-                nameFormatted = nameFormatted?.Replace('\n', ' ');
-                nameFormatted = nameFormatted?.Trim();
-                model.Name = nameFormatted;
                 model.Price = price;
             }
 

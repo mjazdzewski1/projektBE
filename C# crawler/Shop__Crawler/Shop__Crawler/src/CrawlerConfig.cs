@@ -21,8 +21,7 @@ namespace Shop__Crawler.src
             CrawlConfiguration crawlConfig = AbotConfigurationSectionHandler.LoadFromXml().Convert();
             crawlConfig.MaxConcurrentThreads = 15;//this overrides the config value
 
-            // Ostrożnie z głębokością, 0 i tak sporo zwraca rekordów
-            crawlConfig.MaxCrawlDepth = 4;
+            crawlConfig.MaxCrawlDepth = 8;
 
             //Will use app.config for configuration
             PoliteWebCrawler crawler = new PoliteWebCrawler();
@@ -40,7 +39,9 @@ namespace Shop__Crawler.src
         {
             var result = new CrawlDecision();
             if (page.Uri.ToString().Contains("product") || page.Uri.ToString().Contains("category") ||
-                page.Uri.ToString().Contains("productVariantGroup") || page.Uri.ToString().Contains("p=")) 
+                page.Uri.ToString().Contains("productVariantGroup") || page.Uri.ToString().Contains("p=")|| 
+                page.Uri.ToString().Contains("lenovo") || 
+                page.Uri.ToString().Contains("laptop")) 
             {
                 result.Allow = true;
             }
@@ -56,7 +57,9 @@ namespace Shop__Crawler.src
         private CrawlDecision ShouldCrawlPageContent(CrawledPage page, CrawlContext context)
         {
             var result = new CrawlDecision();
-            if (page.Uri.ToString().Contains("product") || page.Uri.ToString().Contains("https://www.komputronik.pl/category/17631/lenovo-ideapad.html"))
+            if (page.Uri.ToString().Contains("product") ||
+                page.Uri.ToString().Contains("lenovo") ||
+                page.Uri.ToString().Contains("laptop")) 
             {
                 result.Allow = true;
             }

@@ -1,4 +1,6 @@
-﻿namespace Shop__Crawler
+﻿using System;
+
+namespace Shop__Crawler
 {
     class FileSystem
     {
@@ -17,6 +19,23 @@
         public void Save()
         {
             System.IO.File.WriteAllText(@"crawled.txt", _fileContent);
+        }
+
+        public void Append(string toAppend)
+        {
+            var success = false;
+            while (!success)
+            {
+                try
+                {
+                    System.IO.File.AppendAllText(@"crawled.txt", toAppend);
+                    success = true;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
         }
     }
 }

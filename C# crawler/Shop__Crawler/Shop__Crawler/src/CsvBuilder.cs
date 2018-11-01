@@ -12,12 +12,19 @@ namespace Shop__Crawler
         private static readonly StringWriter _stringWriter = new StringWriter();
         private static readonly CsvWriter _csvWriter = new CsvWriter(_stringWriter);
 
+        public static void SetUp()
+        {
+            _csvWriter.Configuration.Delimiter = ";";
+        }
+
         public static void TryAddRow(ExportedCsvModel row)
         {
             if (row.IsValid())
             {
                 _csvWriter.WriteRecord(row);
                 _csvWriter.NextRecord();
+                _fileSystem.Append(_stringWriter.ToString());
+                _stringWriter.Flush();
             }
             else
             {
@@ -32,8 +39,6 @@ namespace Shop__Crawler
 
         public static void Save()
         {
-            _csvWriter.Flush();
-            _fileSystem.AddString(_stringWriter.ToString());
             _fileSystem.Save();
         }
     }
