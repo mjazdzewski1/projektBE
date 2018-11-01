@@ -7,6 +7,13 @@ namespace Shop__Crawler
 {
     public class KomputronikDataExtractor : IDataExtractor
     {
+        public ExportedCsvModel AddDescription(CrawledPage crawledPage, ExportedCsvModel model)
+        {
+            var x = crawledPage.HtmlDocument.GetElementbyId("p-inner-features");
+            model.Description = x.InnerHtml.Replace('\n', ' ').Replace("Zobacz wszystkie cechy", "");
+            return model;
+        }
+
         public ExportedCsvModel FormatPrice(ExportedCsvModel model)
         {
             model.Price = model.Price.Replace('z', ' ');
@@ -88,7 +95,7 @@ namespace Shop__Crawler
             return model;
         }
 
-        public string GetPriceWithCents(HtmlNode parentNode)
+        private string GetPriceWithCents(HtmlNode parentNode)
         {
             var zlots = parentNode.ChildNodes.FindFirst("#text").InnerText;
             var groszes = parentNode.ChildNodes.FindFirst("span").InnerText;

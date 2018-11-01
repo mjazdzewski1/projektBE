@@ -23,9 +23,8 @@ namespace Shop__Crawler
             model = _dataExtractor.FormatPrice(model);
             model = _dataExtractor.AddImage(page, model);
             model = _dataExtractor.AddCategory(page, model);
+            model = _dataExtractor.AddDescription(page, model);
             CsvBuilder.TryAddRow(model);
         }
-
-        
     }
 }

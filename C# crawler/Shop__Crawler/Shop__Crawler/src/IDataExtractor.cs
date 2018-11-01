@@ -10,8 +10,8 @@ namespace Shop__Crawler
         ExportedCsvModel AddImage(CrawledPage crawledPage, ExportedCsvModel model);
         ExportedCsvModel AddName(CrawledPage crawledPage, ExportedCsvModel model);
         ExportedCsvModel AddPrice(CrawledPage crawledPage, ExportedCsvModel model);
+        ExportedCsvModel AddDescription(CrawledPage crawledPage, ExportedCsvModel model);
         ExportedCsvModel FormatPrice(ExportedCsvModel model);
-        string GetPriceWithCents(HtmlNode parentNode);
         bool IsNotProductPage(CrawledPage page);
     }
 }
