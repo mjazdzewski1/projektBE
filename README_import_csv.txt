@@ -17,4 +17,4 @@ Gotowe
 
 Import obrazków trochę trwa, dla 600 rekordów to jest jakieś 5-10 minut
 
-Nie radzę importować więcej niż te 600 elementów, długo będzie trwać
+Nie radzę importować więcej niż te 600 elementów, długo będzie trwać aa
