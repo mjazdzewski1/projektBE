@@ -18,32 +18,41 @@ namespace Shop__Crawler
 
         public ExportedCsvModel AddCategories(CrawledPage crawledPage, ExportedCsvModel model)
         {
-            var x = crawledPage.HtmlDocument.GetElementbyId("p-inner-breadcrumb");
-            var categoriesText = x.InnerText.Remove(x.InnerText.IndexOf('{'));
-            categoriesText = categoriesText.Replace('\n', ',');
-
-            categoriesText = Regex.Replace(categoriesText, @"\s+", "");
-            var cleaned = false;
-            while (!cleaned)
+            try
             {
-                var old = categoriesText;
-                categoriesText = categoriesText.Replace(",,", ",");
-                if (categoriesText[0] == ',')
-                    categoriesText = categoriesText.Remove(0, 1);
-                if (categoriesText[categoriesText.Length - 1] == ',')
-                    categoriesText = categoriesText.Remove(categoriesText.Length - 1);
-                if (old == categoriesText)
-                    cleaned = true;
+                var x = crawledPage.HtmlDocument.GetElementbyId("p-inner-breadcrumb");
+                var categoriesText = x.InnerText.Remove(x.InnerText.IndexOf('{'));
+                categoriesText = categoriesText.Replace('\n', ',');
+
+                categoriesText = Regex.Replace(categoriesText, @"\s+", "");
+                var cleaned = false;
+                while (!cleaned)
+                {
+                    var old = categoriesText;
+                    categoriesText = categoriesText.Replace(",,", ",");
+                    if (categoriesText[0] == ',')
+                        categoriesText = categoriesText.Remove(0, 1);
+                    if (categoriesText[categoriesText.Length - 1] == ',')
+                        categoriesText = categoriesText.Remove(categoriesText.Length - 1);
+                    if (old == categoriesText)
+                        cleaned = true;
+                }
+
+                categoriesText = categoriesText.Remove(0, categoriesText.IndexOf(',') + 1);
+                categoriesText = categoriesText.Remove(categoriesText.LastIndexOf(','));
+
+                var mainCategory = categoriesText.Remove(0, categoriesText.LastIndexOf(',') + 1);
+                categoriesText = categoriesText.Remove(categoriesText.LastIndexOf(','));
+                categoriesText = mainCategory + "," + categoriesText;
+
+                model.Category = categoriesText;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                model.Category = "";
             }
 
-            categoriesText = categoriesText.Remove(0, categoriesText.IndexOf(',') + 1);
-            categoriesText = categoriesText.Remove(categoriesText.LastIndexOf(','));
-
-            var mainCategory = categoriesText.Remove(0, categoriesText.LastIndexOf(',') + 1);
-            categoriesText = categoriesText.Remove(categoriesText.LastIndexOf(','));
-            categoriesText = mainCategory + "," + categoriesText;
-
-            model.Category = categoriesText;
             return model;
         }
 

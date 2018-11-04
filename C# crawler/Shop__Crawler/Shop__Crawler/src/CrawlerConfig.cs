@@ -22,9 +22,9 @@ namespace Shop__Crawler.src
             XmlConfigurator.Configure();
 
             CrawlConfiguration crawlConfig = AbotConfigurationSectionHandler.LoadFromXml().Convert();
-            crawlConfig.MaxConcurrentThreads = 15;//this overrides the config value
+            crawlConfig.MaxConcurrentThreads = 500;//this overrides the config value
 
-            crawlConfig.MaxCrawlDepth = 15;
+            crawlConfig.MaxCrawlDepth = 1500;
 
             //Will use app.config for configuration
             PoliteWebCrawler crawler = new PoliteWebCrawler();
@@ -41,19 +41,19 @@ namespace Shop__Crawler.src
         private CrawlDecision ShouldCrawlPageLinks(CrawledPage page, CrawlContext context)
         {
             var result = new CrawlDecision();
-            if (page.Uri.ToString().Contains("product") || page.Uri.ToString().Contains("category") ||
-                page.Uri.ToString().Contains("productVariantGroup") || page.Uri.ToString().Contains("p=")|| 
-                //page.Uri.ToString().Contains("lenovo") || 
-                //page.Uri.ToString().Contains("laptop") || 
-                page.Uri.ToString().Contains("-pc")) 
-            {
-                result.Allow = true;
-            }
-            else
-            {
-                result.Reason = "No no nO";
-                result.Allow = false;
-            }
+            //if (page.Uri.ToString().Contains("product") || page.Uri.ToString().Contains("category") ||
+            //    page.Uri.ToString().Contains("productVariantGroup") || page.Uri.ToString().Contains("p=")|| 
+            //    //page.Uri.ToString().Contains("lenovo") || 
+            //    //page.Uri.ToString().Contains("laptop") || 
+            //    page.Uri.ToString().Contains("-pc")) 
+            //{
+            result.Allow = true;
+            //}
+            //else
+            //{
+            //    result.Reason = "No no nO";
+            //    result.Allow = false;
+            //}
 
             return result;
         }
@@ -62,10 +62,12 @@ namespace Shop__Crawler.src
         {
             var result = new CrawlDecision();
             if (page.Uri.ToString().Contains("product") ||
+                page.Uri.ToString().Contains("category")) 
                 //page.Uri.ToString().Contains("lenovo") ||
                 //page.Uri.ToString().Contains("laptop") ||
-                page.Uri.ToString().Contains("productVariantGroup") ||
-                page.Uri.ToString().Contains("-pc")) 
+                //page.Uri.ToString().Contains("productVariantGroup") ||
+                //page.Uri.ToString().Contains("-pc"))
+
             {
                 result.Allow = true;
                 if (page.Uri.ToString().Contains("-pch"))
@@ -80,19 +82,22 @@ namespace Shop__Crawler.src
                 result.Allow = false;
             }
 
+            result.Allow = true;
+
             return result;
         }
 
         private CrawlDecision ShouldCrawlPage(PageToCrawl page, CrawlContext context)
         {
             var result = new CrawlDecision();
-            if (page.Uri.ToString().Contains("-pc"))
+            if (page.Uri.ToString().Contains("category")
+            || page.Uri.ToString().Contains("product"))
             {
                 result.Allow = true;
             }
             else
             {
-                result.Reason = "CATEGORY / INFORMACJE";
+                result.Reason = "NON cat / prod";
                 result.Allow = false;
             }
 
@@ -103,14 +108,14 @@ namespace Shop__Crawler.src
         void crawler_ProcessPageCrawlCompleted(object sender, PageCrawlCompletedArgs e)
         {
             CrawledPage crawledPage = e.CrawledPage;
+            Console.Write(new Random().NextDouble() < 0.5 ? "." : "X");
+            //if (crawledPage.WebException != null || crawledPage.HttpWebResponse.StatusCode != HttpStatusCode.OK)
+            //    Console.WriteLine("Crawl of page failed {0}", crawledPage.Uri.AbsoluteUri);
+            //else
+            //    Console.WriteLine("Crawl of page succeeded {0}", crawledPage.Uri.AbsoluteUri);
 
-            if (crawledPage.WebException != null || crawledPage.HttpWebResponse.StatusCode != HttpStatusCode.OK)
-                Console.WriteLine("Crawl of page failed {0}", crawledPage.Uri.AbsoluteUri);
-            else
-                Console.WriteLine("Crawl of page succeeded {0}", crawledPage.Uri.AbsoluteUri);
-
-            if (string.IsNullOrEmpty(crawledPage.Content.Text))
-                Console.WriteLine("Page had no content {0}", crawledPage.Uri.AbsoluteUri);
+            //if (string.IsNullOrEmpty(crawledPage.Content.Text))
+            //    Console.WriteLine("Page had no content {0}", crawledPage.Uri.AbsoluteUri);
 
             _dataFinder.Run(crawledPage);
         }
