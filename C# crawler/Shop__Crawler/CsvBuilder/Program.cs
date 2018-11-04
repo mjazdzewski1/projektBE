@@ -15,7 +15,7 @@ namespace CsvBuilder
             for (int i = 0; i < 700; i++)
             {
                 var lineNum = rand.Next(allLines.Length);
-                System.IO.File.AppendAllText(@"products.csv", allLines[lineNum] + "\n");
+                System.IO.File.AppendAllText(@"products.csv", allLines[lineNum] + ";1" + "\n");
             }
 
             Console.WriteLine("DONE");

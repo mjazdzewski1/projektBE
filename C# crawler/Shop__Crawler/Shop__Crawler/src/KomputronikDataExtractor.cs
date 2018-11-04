@@ -24,8 +24,18 @@ namespace Shop__Crawler
                 var categoriesText = x.InnerText.Remove(x.InnerText.IndexOf('{'));
                 categoriesText = categoriesText.Replace('\n', ',');
 
-                categoriesText = Regex.Replace(categoriesText, @"\s+", "");
+                //categoriesText = Regex.Replace(categoriesText, @"\s+", "");
+
                 var cleaned = false;
+                while (!cleaned)
+                {
+                    var old = categoriesText;
+                    categoriesText = categoriesText.Replace("  ", string.Empty);
+                    categoriesText = categoriesText.Trim();
+                    if (old == categoriesText)
+                        cleaned = true;
+                }
+                cleaned = false;
                 while (!cleaned)
                 {
                     var old = categoriesText;
@@ -39,8 +49,10 @@ namespace Shop__Crawler
                 }
 
                 categoriesText = categoriesText.Remove(0, categoriesText.IndexOf(',') + 1);
-                categoriesText = categoriesText.Remove(categoriesText.LastIndexOf(','));
+                //last category removal
+                //categoriesText = categoriesText.Remove(categoriesText.LastIndexOf(','));
 
+                //switch first and last category
                 var mainCategory = categoriesText.Remove(0, categoriesText.LastIndexOf(',') + 1);
                 categoriesText = categoriesText.Remove(categoriesText.LastIndexOf(','));
                 categoriesText = mainCategory + "," + categoriesText;

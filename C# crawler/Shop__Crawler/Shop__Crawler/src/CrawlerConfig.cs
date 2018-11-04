@@ -22,7 +22,7 @@ namespace Shop__Crawler.src
             XmlConfigurator.Configure();
 
             CrawlConfiguration crawlConfig = AbotConfigurationSectionHandler.LoadFromXml().Convert();
-            crawlConfig.MaxConcurrentThreads = 500;//this overrides the config value
+            crawlConfig.MaxConcurrentThreads = 1;//this overrides the config value
 
             crawlConfig.MaxCrawlDepth = 1500;
 
